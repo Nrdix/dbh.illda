@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Happy Birthday Desktop</title>
+    <title>Happy Birthday Adilla</title>
     <style>
       * {
         margin: 0;
@@ -176,6 +176,9 @@
       .desktop-icon:nth-child(3) {
         animation: iconPop 0.4s ease-out 1.6s forwards;
       }
+      .desktop-icon:nth-child(4) {
+        animation: iconPop 0.4s ease-out 1.8s forwards;
+      }
 
       .desktop-icon:active {
         background: rgba(255, 255, 255, 0.25);
@@ -209,8 +212,8 @@
         left: 50%;
         transform: translate(-50%, -50%) scale(0.9);
         width: 90%;
-        max-width: 350px;
-        max-height: 70vh;
+        max-width: 400px;
+        max-height: 80vh;
         background: #c0c0c0;
         border: 2px solid #000;
         border-radius: 0;
@@ -650,6 +653,126 @@
         min-width: 80px;
       }
 
+      /* GAME STYLES */
+      .game-header {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .game-title {
+        color: #000080;
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      .game-info {
+        background: #ffffcc;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-size: 12px;
+      }
+
+      .game-board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin: 15px 0;
+        min-height: 300px;
+      }
+
+      .game-card {
+        aspect-ratio: 3/4;
+        border-radius: 5px;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.4s;
+        cursor: pointer;
+        border: 2px solid #808080;
+      }
+
+      .game-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .card-front,
+      .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 3px;
+        backface-visibility: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .card-back {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      .card-back::after {
+        content: "?";
+      }
+
+      .card-front {
+        background: white;
+        transform: rotateY(180deg);
+        padding: 2px;
+      }
+
+      .card-front img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 3px;
+      }
+
+      .game-card.flipped {
+        transform: rotateY(180deg);
+      }
+
+      .game-card.matched {
+        cursor: default;
+        border-color: #06d6a0;
+      }
+
+      .game-controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .game-btn {
+        flex: 1;
+        padding: 8px;
+        background: #c0c0c0;
+        border: 2px solid #808080;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 11px;
+      }
+
+      .game-btn.start {
+        background: #00a800;
+        color: white;
+        border-color: #000;
+      }
+
+      .game-result {
+        display: none;
+        background: #ffffcc;
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 5px;
+        text-align: center;
+      }
+
       /* OVERLAY */
       .overlay {
         position: fixed;
@@ -739,7 +862,7 @@
 
         .window {
           width: 95%;
-          max-height: 65vh;
+          max-height: 70vh;
         }
 
         .birthday-message {
@@ -755,6 +878,11 @@
         .candles {
           gap: 20px;
         }
+
+        .game-board {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 6px;
+        }
       }
 
       @media (max-width: 360px) {
@@ -768,6 +896,10 @@
 
         .candles {
           gap: 15px;
+        }
+
+        .game-board {
+          grid-template-columns: repeat(3, 1fr);
         }
       }
     </style>
@@ -794,16 +926,21 @@
 
     <!-- DESKTOP ICONS -->
     <div class="desktop">
+      <div class="desktop-icon" onclick="openWindow('cake')">
+        <div class="icon-box" style="background: #ffd166; color: white">🎂</div>
+        <span>cake.exe</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('game')">
+        <div class="icon-box" style="background: #9d4edd; color: white">🎮</div>
+        <span>memory_game.exe</span>
+      </div>
+
       <div class="desktop-icon" onclick="openWindow('presenter')">
         <div class="icon-box" style="background: #ff6b6b; color: white">
           TXT
         </div>
         <span>presenter.exe</span>
-      </div>
-
-      <div class="desktop-icon" onclick="openWindow('cake')">
-        <div class="icon-box" style="background: #ffd166; color: white">🎂</div>
-        <span>cake.exe</span>
       </div>
 
       <div class="desktop-icon" onclick="openWindow('gallery')">
@@ -813,6 +950,140 @@
     </div>
 
     <!-- WINDOWS -->
+    <!-- CAKE WINDOW -->
+    <div class="window" id="cake-window">
+      <div class="window-header">
+        <span>Cake.exe</span>
+        <button class="window-close" onclick="closeWindow('cake')">X</button>
+      </div>
+      <div class="window-content">
+        <div class="cake-container">
+          <div class="birthday-message" style="text-align: center">
+            jangan lupa berdoa duluuu...
+          </div>
+
+          <div class="cake-image">
+            <!-- Cake Base -->
+            <div class="cake-base"></div>
+            <div class="cake-layer"></div>
+            <div class="cake-icing"></div>
+
+            <!-- Candles -->
+            <div class="candles" id="candles">
+              <div class="candle" id="candle1">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle2">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle3">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle4">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle5">
+                <div class="flame"></div>
+              </div>
+            </div>
+
+            <!-- Confetti -->
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+          </div>
+
+          <button class="blow-btn" onclick="blowCandle()" id="blowBtn">
+            <span id="btnText">🎂 TIUP LILIN 🎂</span>
+          </button>
+
+          <div class="celebration" id="celebration">
+            🎉 YEAY! HAPPY BIRTHDAY! 🎉
+          </div>
+
+          <div
+            style="
+              margin-top: 10px;
+              font-size: 11px;
+              color: #666;
+              text-align: center;
+            "
+          >
+            Klik tombol untuk meniup lilin!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME WINDOW -->
+    <div class="window" id="game-window">
+      <div class="window-header">
+        <span>Memory_Game.exe</span>
+        <button class="window-close" onclick="closeWindow('game')">X</button>
+      </div>
+      <div class="window-content">
+        <div class="game-header">
+          <h1 class="game-title">🎮 MEMORY BIRTHDAY GAME</h1>
+          <p style="font-weight: bold; color: #666">
+            Temukan semua pasangan foto!
+          </p>
+        </div>
+
+        <div class="game-info">
+          <p style="margin-bottom: 5px"><strong>Cara main:</strong></p>
+          <p style="font-size: 11px; margin-bottom: 5px">
+            1. Klik kartu untuk membuka
+          </p>
+          <p style="font-size: 11px; margin-bottom: 5px">
+            2. Cari 2 kartu dengan foto yang sama
+          </p>
+          <p style="font-size: 11px">
+            3. Temukan semua 8 pasangan untuk menang!
+          </p>
+        </div>
+
+        <div id="gameBoard" class="game-board">
+          <!-- Kartu akan dibuat oleh JavaScript -->
+        </div>
+
+        <div class="game-controls">
+          <button
+            class="game-btn start"
+            id="gameStartBtn"
+            onclick="startMemoryGame()"
+          >
+            ▶️ MULAI GAME
+          </button>
+          <button
+            class="game-btn"
+            id="gameRestartBtn"
+            onclick="restartMemoryGame()"
+            disabled
+          >
+            🔄 ULANGI
+          </button>
+        </div>
+
+        <div id="gameResult" class="game-result">
+          <!-- Result akan ditampilkan di sini -->
+        </div>
+
+        <div
+          style="
+            margin-top: 15px;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+          "
+        >
+          Game ini menggunakan foto-foto dari galeri!
+        </div>
+      </div>
+    </div>
+
     <!-- PRESENTER WINDOW -->
     <div class="window" id="presenter-window">
       <div class="window-header">
@@ -910,74 +1181,6 @@
       </div>
     </div>
 
-    <!-- CAKE WINDOW -->
-    <div class="window" id="cake-window">
-      <div class="window-header">
-        <span>Cake.exe</span>
-        <button class="window-close" onclick="closeWindow('cake')">X</button>
-      </div>
-      <div class="window-content">
-        <div class="cake-container">
-          <div class="birthday-message" style="text-align: center">
-            jangan lupa berdoa duluuu...
-          </div>
-
-          <div class="cake-image">
-            <!-- Cake Base -->
-            <div class="cake-base"></div>
-            <div class="cake-layer"></div>
-            <div class="cake-icing"></div>
-
-            <!-- Candles -->
-            <div class="candles" id="candles">
-              <div class="candle" id="candle1">
-                <div class="flame"></div>
-              </div>
-              <div class="candle" id="candle2">
-                <div class="flame"></div>
-              </div>
-              <div class="candle" id="candle3">
-                <div class="flame"></div>
-              </div>
-              <div class="candle" id="candle4">
-                <div class="flame"></div>
-              </div>
-              <div class="candle" id="candle5">
-                <div class="flame"></div>
-              </div>
-            </div>
-
-            <!-- Confetti -->
-            <div class="confetti"></div>
-            <div class="confetti"></div>
-            <div class="confetti"></div>
-            <div class="confetti"></div>
-            <div class="confetti"></div>
-            <div class="confetti"></div>
-          </div>
-
-          <button class="blow-btn" onclick="blowCandle()" id="blowBtn">
-            <span id="btnText">🎂 TIUP LILIN 🎂</span>
-          </button>
-
-          <div class="celebration" id="celebration">
-            🎉 YEAY! HAPPY BIRTHDAY! 🎉
-          </div>
-
-          <div
-            style="
-              margin-top: 10px;
-              font-size: 11px;
-              color: #666;
-              text-align: center;
-            "
-          >
-            Klik tombol untuk meniup lilin!
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- GALLERY WINDOW -->
     <div class="window" id="gallery-window">
       <div class="window-header">
@@ -1041,19 +1244,29 @@
 
     <!-- TASKBAR -->
     <div class="taskbar">
-      <button class="start-btn" onclick="alert('🎉 Happy Birthday! 🎂')">
+      <button class="start-btn" onclick="alert('🎉 Happy Birthday Adilla! 🎂')">
         Start
       </button>
       <div class="clock" id="clock">00:00</div>
     </div>
 
     <script>
-      // =================== SOLUSI 100% WORK ===================
-      // Audio Background
+      // =================== VARIABLES ===================
       let backgroundMusic;
       let isMusicPlaying = false;
 
-      // Music Control
+      // Memory Game Variables
+      let memoryGameState = {
+        cards: [],
+        flippedCards: [],
+        matchedPairs: 0,
+        gameActive: false,
+        totalPairs: 8, // 16 kartu total (8 pasang)
+        moves: 0,
+        photosUsed: [],
+      };
+
+      // =================== MUSIC FUNCTIONS ===================
       function toggleMusic() {
         if (!backgroundMusic) {
           backgroundMusic = new Audio("musik/nadin.mp3");
@@ -1062,26 +1275,21 @@
         }
 
         if (!isMusicPlaying) {
-          // Coba play musik
-          const playPromise = backgroundMusic.play();
-
-          if (playPromise !== undefined) {
-            playPromise
-              .then(() => {
-                isMusicPlaying = true;
-                document.getElementById("musicToggle").textContent = "♪";
-                document.getElementById("musicTitle").textContent =
-                  "Now Playing...";
-              })
-              .catch((error) => {
-                console.log("Play failed:", error);
-                // Fallback
-                alert("Klik OK untuk mulai musik!");
-                backgroundMusic.play();
-                isMusicPlaying = true;
-                document.getElementById("musicToggle").textContent = "♪";
-              });
-          }
+          backgroundMusic
+            .play()
+            .then(() => {
+              isMusicPlaying = true;
+              document.getElementById("musicToggle").textContent = "♪";
+              document.getElementById("musicTitle").textContent =
+                "Now Playing...";
+            })
+            .catch((e) => {
+              console.log("Music play failed:", e);
+              alert("Klik OK untuk mulai musik!");
+              backgroundMusic.play();
+              isMusicPlaying = true;
+              document.getElementById("musicToggle").textContent = "♪";
+            });
         } else {
           backgroundMusic.pause();
           document.getElementById("musicToggle").textContent = "🔇";
@@ -1089,11 +1297,16 @@
         }
       }
 
-      // Window Management
+      // =================== WINDOW MANAGEMENT ===================
       function openWindow(app) {
         closeAllWindows();
         document.getElementById("overlay").classList.add("active");
         document.getElementById(app + "-window").classList.add("active");
+
+        // Jika membuka game, inisialisasi
+        if (app === "game") {
+          initMemoryGame();
+        }
       }
 
       function closeWindow(app) {
@@ -1107,39 +1320,22 @@
         windows.forEach((window) => window.classList.remove("active"));
       }
 
-      // Presenter Scroll
-      function scrollMessage(amount) {
-        const message = document.querySelector(".birthday-message");
-        message.scrollTop += amount;
-      }
-
-      // Cake Interaction dengan animasi keren
+      // =================== CAKE FUNCTIONS ===================
       function blowCandle() {
         const blowBtn = document.getElementById("blowBtn");
         const btnText = document.getElementById("btnText");
         const celebration = document.getElementById("celebration");
         const candles = document.querySelectorAll(".candle");
 
-        // Disable button selama animasi
         blowBtn.disabled = true;
-
-        // Animasi tombol ditekan
         blowBtn.style.transform = "scale(0.95)";
         blowBtn.style.boxShadow = "0 2px 0 #cc4c4c";
 
-        // Sound effect tiup lilin
-        const blowSound = new Audio(
-          "https://assets.mixkit.co/sfx/preview/mixkit-candle-blow-738.mp3"
-        );
-        blowSound.volume = 0.3;
-        blowSound.play().catch((e) => console.log("Sound autoplay blocked"));
-
-        // Tiup lilin satu per satu dengan delay
+        // Tiup lilin satu per satu
         candles.forEach((candle, index) => {
           setTimeout(() => {
             candle.classList.add("blown");
 
-            // Tambahkan efek asap
             const smoke = document.createElement("div");
             smoke.innerHTML = "💨";
             smoke.style.position = "absolute";
@@ -1152,27 +1348,19 @@
             smoke.style.animation = "smoke 1s ease-out forwards";
             candle.appendChild(smoke);
 
-            // Hapus asap setelah animasi
             setTimeout(() => {
-              if (smoke.parentNode) {
-                smoke.remove();
-              }
+              if (smoke.parentNode) smoke.remove();
             }, 1000);
-          }, index * 300); // Delay antar lilin
+          }, index * 300);
         });
 
-        // Setelah semua lilin ditiup
         setTimeout(() => {
-          // Ganti text tombol
           btnText.innerHTML = "🎉 LILIN SUDAH DITIUP! 🎉";
           blowBtn.style.background =
             "linear-gradient(135deg, #ff9900 0%, #ff6b00 100%)";
           blowBtn.style.boxShadow = "0 4px 0 #cc7a00";
-
-          // Tampilkan celebration
           celebration.style.display = "block";
 
-          // Animasi confetti
           const confetti = document.querySelectorAll(".confetti");
           confetti.forEach((piece, index) => {
             piece.style.animation = `fall ${
@@ -1181,42 +1369,20 @@
             piece.style.animationDelay = `${index * 0.1}s`;
           });
 
-          // Sound effect celebration
-          setTimeout(() => {
-            const cheerSound = new Audio(
-              "https://assets.mixkit.co/sfx/preview/mixkit-happy-crowd-laugh-464.mp3"
-            );
-            cheerSound.volume = 0.3;
-            cheerSound.play().catch((e) => console.log("Cheer sound blocked"));
-          }, 1500);
-
-          // Reset tombol
           setTimeout(() => {
             blowBtn.style.transform = "scale(1)";
           }, 500);
         }, candles.length * 300 + 500);
       }
 
-      // Gallery Tabs
-      function switchTab(tabName) {
-        document
-          .querySelectorAll(".tab-btn")
-          .forEach((btn) => btn.classList.remove("active"));
-        document
-          .querySelectorAll(".tab-content")
-          .forEach((content) => content.classList.remove("active"));
-
-        event.target.classList.add("active");
-        document.getElementById(tabName + "-tab").classList.add("active");
-
-        if (tabName === "foto") {
-          showFoto(currentFotoIndex);
-        } else {
-          showVideo(currentVideoIndex);
-        }
+      // =================== PRESENTER FUNCTIONS ===================
+      function scrollMessage(amount) {
+        const message = document.querySelector(".birthday-message");
+        message.scrollTop += amount;
       }
 
-      // Foto Gallery (8 foto)
+      // =================== GALLERY FUNCTIONS ===================
+      // Foto Gallery
       const fotoFiles = [
         "1.jpg",
         "2.png",
@@ -1240,14 +1406,14 @@
           const slide = document.createElement("div");
           slide.className = "slide" + (index === 0 ? " active" : "");
           slide.innerHTML = `
-                <div class="photo-frame">
-                    <img src="${foto}" alt="Foto ${index + 1}" 
-                         onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='Foto ${
-                           index + 1
-                         }'">
-                </div>
-                <div class="photo-label">Foto ${index + 1}</div>
-            `;
+                    <div class="photo-frame">
+                        <img src="${foto}" alt="Foto ${index + 1}" 
+                             onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='Foto ${
+                               index + 1
+                             }'">
+                    </div>
+                    <div class="photo-label">Foto ${index + 1}</div>
+                `;
           container.appendChild(slide);
         });
       }
@@ -1269,7 +1435,7 @@
         showFoto(currentFotoIndex);
       }
 
-      // Video Gallery (3 video)
+      // Video Gallery
       const videoFiles = [
         "1.mp4",
         "2.mp4",
@@ -1287,16 +1453,16 @@
           const slide = document.createElement("div");
           slide.className = "slide" + (index === 0 ? " active" : "");
           slide.innerHTML = `
-                <div class="photo-frame">
-                    <video controls onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='Video ${
-                      index + 1
-                    }'">
-                        <source src="${video}" type="video/mp4">
-                        Browser tidak mendukung video.
-                    </video>
-                </div>
-                <div class="photo-label">Video ${index + 1}</div>
-            `;
+                    <div class="photo-frame">
+                        <video controls onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='Video ${
+                          index + 1
+                        }'">
+                            <source src="${video}" type="video/mp4">
+                            Browser tidak mendukung video.
+                        </video>
+                    </div>
+                    <div class="photo-label">Video ${index + 1}</div>
+                `;
           container.appendChild(slide);
         });
       }
@@ -1318,7 +1484,206 @@
         showVideo(currentVideoIndex);
       }
 
-      // Clock
+      function switchTab(tabName) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((content) => content.classList.remove("active"));
+
+        event.target.classList.add("active");
+        document.getElementById(tabName + "-tab").classList.add("active");
+
+        if (tabName === "foto") {
+          showFoto(currentFotoIndex);
+        } else {
+          showVideo(currentVideoIndex);
+        }
+      }
+
+      // =================== MEMORY GAME FUNCTIONS ===================
+      function initMemoryGame() {
+        const gameBoard = document.getElementById("gameBoard");
+        const resultDiv = document.getElementById("gameResult");
+
+        // Reset state
+        memoryGameState.cards = [];
+        memoryGameState.flippedCards = [];
+        memoryGameState.matchedPairs = 0;
+        memoryGameState.gameActive = false;
+        memoryGameState.moves = 0;
+
+        // Clear board
+        gameBoard.innerHTML = "";
+        resultDiv.innerHTML = "";
+        resultDiv.style.display = "none";
+
+        // Reset buttons
+        document.getElementById("gameStartBtn").disabled = false;
+        document.getElementById("gameStartBtn").innerHTML = "▶️ MULAI GAME";
+        document.getElementById("gameRestartBtn").disabled = true;
+
+        // Pilih 8 foto acak dari fotoFiles untuk game
+        memoryGameState.photosUsed = [...fotoFiles]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, memoryGameState.totalPairs);
+
+        // Buat array pasangan (setiap foto 2x)
+        let cardPairs = [];
+        memoryGameState.photosUsed.forEach((photo, index) => {
+          cardPairs.push({ url: photo, id: index });
+          cardPairs.push({ url: photo, id: index });
+        });
+
+        // Acak urutan kartu
+        cardPairs = cardPairs.sort(() => Math.random() - 0.5);
+
+        // Buat elemen kartu (16 kartu)
+        for (let i = 0; i < cardPairs.length; i++) {
+          const card = document.createElement("div");
+          card.className = "game-card";
+          card.dataset.index = i;
+          card.dataset.photoId = cardPairs[i].id;
+
+          // Card back
+          const cardBack = document.createElement("div");
+          cardBack.className = "card-back";
+
+          // Card front dengan gambar
+          const cardFront = document.createElement("div");
+          cardFront.className = "card-front";
+
+          const img = document.createElement("img");
+          img.src = cardPairs[i].url;
+          img.alt = `Foto ${cardPairs[i].id + 1}`;
+          img.onerror = function () {
+            this.src =
+              'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%23667eea"><text x="12" y="16" text-anchor="middle" font-size="10">Foto ' +
+              (cardPairs[i].id + 1) +
+              "</text></svg>";
+          };
+
+          cardFront.appendChild(img);
+          card.appendChild(cardBack);
+          card.appendChild(cardFront);
+
+          // Event listener akan ditambahkan saat game dimulai
+          card.onclick = () => handleCardClick(i);
+
+          gameBoard.appendChild(card);
+
+          memoryGameState.cards.push({
+            element: card,
+            photoId: cardPairs[i].id,
+            photoUrl: cardPairs[i].url,
+            flipped: false,
+            matched: false,
+          });
+        }
+      }
+
+      function startMemoryGame() {
+        memoryGameState.gameActive = true;
+        document.getElementById("gameStartBtn").disabled = true;
+        document.getElementById("gameRestartBtn").disabled = false;
+        document.getElementById("gameStartBtn").innerHTML = "🎮 GAME BERJALAN";
+
+        // Tampilkan semua kartu sebentar (preview)
+        memoryGameState.cards.forEach((card) => {
+          card.element.classList.add("flipped");
+        });
+
+        setTimeout(() => {
+          memoryGameState.cards.forEach((card) => {
+            card.element.classList.remove("flipped");
+          });
+        }, 2000);
+      }
+
+      function handleCardClick(index) {
+        if (!memoryGameState.gameActive) return;
+
+        const card = memoryGameState.cards[index];
+
+        if (
+          card.flipped ||
+          card.matched ||
+          memoryGameState.flippedCards.length >= 2
+        ) {
+          return;
+        }
+
+        // Buka kartu
+        card.element.classList.add("flipped");
+        card.flipped = true;
+        memoryGameState.flippedCards.push(card);
+        memoryGameState.moves++;
+
+        // Cek jika sudah 2 kartu terbuka
+        if (memoryGameState.flippedCards.length === 2) {
+          const [card1, card2] = memoryGameState.flippedCards;
+
+          if (card1.photoId === card2.photoId) {
+            // Cocok!
+            setTimeout(() => {
+              card1.matched = true;
+              card2.matched = true;
+              card1.element.classList.add("matched");
+              card2.element.classList.add("matched");
+
+              memoryGameState.matchedPairs++;
+
+              // Cek apakah game selesai
+              if (memoryGameState.matchedPairs === memoryGameState.totalPairs) {
+                endMemoryGame(true);
+              }
+
+              memoryGameState.flippedCards = [];
+            }, 500);
+          } else {
+            // Tidak cocok, tutup kembali
+            setTimeout(() => {
+              card1.element.classList.remove("flipped");
+              card2.element.classList.remove("flipped");
+              card1.flipped = false;
+              card2.flipped = false;
+
+              memoryGameState.flippedCards = [];
+            }, 1000);
+          }
+        }
+      }
+
+      function endMemoryGame(isWin) {
+        memoryGameState.gameActive = false;
+
+        const resultDiv = document.getElementById("gameResult");
+
+        if (isWin) {
+          resultDiv.innerHTML = `
+                    <h3 style="color: #06d6a0; margin-bottom: 10px;">🎉 SELAMAT! KAMU MENANG!</h3>
+                    <p style="margin-bottom: 5px;">Kamu menemukan semua ${memoryGameState.totalPairs} pasangan!</p>
+                    <p style="margin-bottom: 5px;">Total gerakan: ${memoryGameState.moves}</p>
+                    <p style="font-size: 12px; color: #666;">Happy Birthday! 🎂</p>
+                `;
+        } else {
+          resultDiv.innerHTML = `
+                    <h3 style="color: #ff6b6b; margin-bottom: 10px;">GAME SELESAI</h3>
+                    <p style="margin-bottom: 5px;">Kamu menemukan ${memoryGameState.matchedPairs} dari ${memoryGameState.totalPairs} pasangan.</p>
+                    <p style="margin-bottom: 5px;">Total gerakan: ${memoryGameState.moves}</p>
+                `;
+        }
+
+        resultDiv.style.display = "block";
+      }
+
+      function restartMemoryGame() {
+        initMemoryGame();
+        startMemoryGame();
+      }
+
+      // =================== CLOCK ===================
       function updateClock() {
         const now = new Date();
         const timeString =
@@ -1328,12 +1693,11 @@
         document.getElementById("clock").textContent = timeString;
       }
 
-      // =================== LOADING DENGAN AUTO MUSIK ===================
+      // =================== LOADING ===================
       window.addEventListener("load", function () {
         const loadingScreen = document.getElementById("loadingScreen");
         const loadingProgress = document.getElementById("loadingProgress");
 
-        // Animate progress bar
         setTimeout(() => {
           loadingProgress.style.width = "30%";
         }, 300);
@@ -1347,33 +1711,30 @@
           loadingProgress.style.width = "100%";
         }, 1200);
 
-        // Setelah loading selesai
         setTimeout(() => {
-          // Ganti loading dengan tombol start besar
           loadingScreen.innerHTML = `
-                <div style="text-align: center; color: white; padding: 40px 20px;">
-                    <h1 style="font-size: 28px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
-                        🎂 HAPPY BIRTHDAY ADILL'A! 🎂
-                    </h1>
-                    <button id="startPartyBtn" style="
-                        background: linear-gradient(135deg, #ff6b6b 0%, #ff4444 100%);
-                        color: white;
-                        border: none;
-                        padding: 25px 50px;
-                        font-size: 22px;
-                        font-weight: bold;
-                        border-radius: 50px;
-                        cursor: pointer;
-                        box-shadow: 0 6px 0 #cc3333;
-                        transition: all 0.2s;
-                        margin: 20px 0;
-                    ">
-                        🎵 KLIK DULU TOMBOL INI KAK! 🎵
-                    </button>
-                </div>
-            `;
+                    <div style="text-align: center; color: white; padding: 40px 20px;">
+                        <h1 style="font-size: 28px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                            🎂 HAPPY BIRTHDAY ADILL'A! 🎂
+                        </h1>
+                        <button id="startPartyBtn" style="
+                            background: linear-gradient(135deg, #ff6b6b 0%, #ff4444 100%);
+                            color: white;
+                            border: none;
+                            padding: 25px 50px;
+                            font-size: 22px;
+                            font-weight: bold;
+                            border-radius: 50px;
+                            cursor: pointer;
+                            box-shadow: 0 6px 0 #cc3333;
+                            transition: all 0.2s;
+                            margin: 20px 0;
+                        ">
+                            🎵 KLIK DULU TOMBOL INI KAK! 🎵
+                        </button>
+                    </div>
+                `;
 
-          // Tambahkan event untuk tombol start
           setTimeout(() => {
             const startBtn = document.getElementById("startPartyBtn");
 
@@ -1385,20 +1746,14 @@
                 backgroundMusic.volume = 0.5;
               }
 
-              // Play musik - INI AKAN WORK 100% KARENA USER SUDAH KLIK
+              // Play musik setelah user klik
               backgroundMusic
                 .play()
                 .then(() => {
-                  console.log("🎵 Music autoplay SUCCESS after user click!");
                   isMusicPlaying = true;
                   document.getElementById("musicToggle").textContent = "♪";
-                  document.getElementById("musicTitle").textContent = "";
 
-                  // Sembunyikan loading
                   loadingScreen.classList.add("hidden");
-
-                  // Tampilkan pesan welcome
-                  setTimeout(() => {}, 500);
                 })
                 .catch((e) => {
                   console.log("Music play failed:", e);
@@ -1409,9 +1764,11 @@
               // Initialize gallery
               initFotoSlideshow();
               initVideoSlideshow();
+
+              // Initialize memory game
+              initMemoryGame();
             };
 
-            // Juga beri event click ke seluruh loading screen
             loadingScreen.onclick = function (e) {
               if (e.target.id !== "startPartyBtn") {
                 startBtn.click();
@@ -1421,7 +1778,7 @@
         }, 1300);
       });
 
-      // Initialize
+      // =================== INITIALIZE ===================
       document.addEventListener("DOMContentLoaded", function () {
         updateClock();
         setInterval(updateClock, 60000);
@@ -1434,4 +1791,3 @@
     </script>
   </body>
 </html>
-
